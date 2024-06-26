@@ -23,7 +23,7 @@ public class LocacaoService {
         }
 
         if (filme.getEstoque() == 0) {
-            throw new FilmeSemEstoqueException();
+            throw new FilmeSemEstoqueException("Filme sem estoque");
         }
 
         Locacao locacao = new Locacao();

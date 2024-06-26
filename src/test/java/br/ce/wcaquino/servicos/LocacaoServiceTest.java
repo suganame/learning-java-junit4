@@ -5,9 +5,7 @@ import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
 import exceptions.FilmeSemEstoqueException;
 import exceptions.LocadoraException;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
 
@@ -22,16 +20,22 @@ import static org.junit.Assert.assertThat;
 
 public class LocacaoServiceTest {
 
+    private LocacaoService service;
+
     @Rule
     public ErrorCollector error = new ErrorCollector();
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
+    @Before
+    public void setup() {
+        service = new LocacaoService();
+    }
+
     @Test
     public void testLocacao() throws Exception {
         // Arrange
-        LocacaoService service = new LocacaoService();
         Usuario usuario = new Usuario("Usuario 1");
         Filme filme = new Filme("Filme 1", 2, 5.0);
 
@@ -47,7 +51,6 @@ public class LocacaoServiceTest {
     @Test(expected = FilmeSemEstoqueException.class)
     public void testLocacao_filmeSemEstoque() throws Exception {
         // Arrange
-        LocacaoService service = new LocacaoService();
         Usuario usuario = new Usuario("Usuario 1");
         Filme filme = new Filme("Filme 1", 0, 5.0);
 
@@ -58,7 +61,6 @@ public class LocacaoServiceTest {
     @Test
     public void testLocacao_filmeSemEstoque_2() {
         // Arrange
-        LocacaoService service = new LocacaoService();
         Usuario usuario = new Usuario("Usuario 1");
         Filme filme = new Filme("Filme 1", 0, 5.0);
 
@@ -77,7 +79,6 @@ public class LocacaoServiceTest {
     @Test
     public void testLocacao_filmeSemEstoque_3() throws Exception {
         // Arrange
-        LocacaoService service = new LocacaoService();
         Usuario usuario = new Usuario("Usuario 1");
         Filme filme = new Filme("Filme 1", 0, 5.0);
 
@@ -92,7 +93,6 @@ public class LocacaoServiceTest {
     @Test
     public void testLocacao_usuarioVazio() throws FilmeSemEstoqueException {
         // Arrange
-        LocacaoService service = new LocacaoService();
         Filme filme = new Filme("Filme 2", 1, 4.0);
 
         try {
@@ -109,7 +109,6 @@ public class LocacaoServiceTest {
     @Test
     public void testLocacao_filmeVazio() throws FilmeSemEstoqueException, LocadoraException {
         // Arrange
-        LocacaoService service = new LocacaoService();
         Usuario usuario = new Usuario("Usuario 1");
 
         // Assert
