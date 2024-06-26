@@ -3,6 +3,8 @@ package br.ce.wcaquino.servicos;
 import br.ce.wcaquino.entidades.Filme;
 import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
+import exceptions.FilmeSemEstoqueException;
+import exceptions.LocadoraException;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -42,7 +44,7 @@ public class LocacaoServiceTest {
         error.checkThat(isMesmaData(locacao.getDataRetorno(), obterDataComDiferencaDias(1)), is(true));
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = FilmeSemEstoqueException.class)
     public void testLocacao_filmeSemEstoque() throws Exception {
         // Arrange
         LocacaoService service = new LocacaoService();
@@ -71,6 +73,7 @@ public class LocacaoServiceTest {
         }
     }
 
+    // Forma elegante - utilizada para excecoes que sao lancadas somente por aquele motivo
     @Test
     public void testLocacao_filmeSemEstoque_3() throws Exception {
         // Arrange
@@ -83,5 +86,37 @@ public class LocacaoServiceTest {
 
         // Act
         service.alugarFilme(usuario, filme);
+    }
+
+    // Forma Robusta - forma que possui mais poder sobre a execução
+    @Test
+    public void testLocacao_usuarioVazio() throws FilmeSemEstoqueException {
+        // Arrange
+        LocacaoService service = new LocacaoService();
+        Filme filme = new Filme("Filme 2", 1, 4.0);
+
+        try {
+            // Act
+            service.alugarFilme(null, filme);
+            // Assert
+            Assert.fail();
+        } catch (LocadoraException e) {
+            // Assert
+            Assert.assertThat(e.getMessage(), is("Usuario vazio"));
+        }
+    }
+
+    @Test
+    public void testLocacao_filmeVazio() throws FilmeSemEstoqueException, LocadoraException {
+        // Arrange
+        LocacaoService service = new LocacaoService();
+        Usuario usuario = new Usuario("Usuario 1");
+
+        // Assert
+        exception.expect(LocadoraException.class);
+        exception.expectMessage("Filme vazio");
+
+        // Act
+        service.alugarFilme(usuario, null);
     }
 }
